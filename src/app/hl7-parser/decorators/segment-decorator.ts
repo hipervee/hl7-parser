@@ -1,6 +1,6 @@
 import { SegmentMetadata } from './segment-metadata';
 import "reflect-metadata";
-const segmentMetadataKey = "HL7Segment";
+const segmentMetadataKey = "HL7Segments";
 export const HL7Segment = (options: SegmentMetadata) => {
     return (target, property) => {
         var classConstructor = target.constructor;

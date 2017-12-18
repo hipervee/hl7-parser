@@ -7,13 +7,17 @@ export class Parser {
     rawMessage: string;
     rawSegments: string[] = [];
     message: HL7Message
+    messageSegmentsMetadata: any = {};
     constructor() {
         this.rawMessage = '';
         this.message = new HL7Message();
     }
     Parse(message: string) {
-        this.rawMessage = message; this.formatMessage();
+        this.rawMessage = message;
+        this.formatMessage();
         this.createRawSegments();
+
+        this.messageSegmentsMetadata = Reflect.getMetadata('HL7Segments', HL7Message);
         this.parseSegments();
     }
 
@@ -37,15 +41,23 @@ export class Parser {
     }
 
     parseSegments() {
+        let messageMetadata = Object.keys(this.messageSegmentsMetadata)
+            .map(o => {
+                this.messageSegmentsMetadata[o].customId = o;
+                return this.messageSegmentsMetadata[o];
+            });
+        let parseableSegments = messageMetadata.map(o => o.id);
         this.rawSegments.forEach(segment => {
             let components = segment.split('|').map(o => o.split('^'));
             let segmentId = components[0][0];
-            if (this.message[segmentId]) {
-                let segmentMetadata = this.getSegmentMetadata(this.message[segmentId].constructor);
+
+            if (parseableSegments.indexOf(segmentId) > -1) {
+                let messageSegment = messageMetadata.filter(o => o.id == segmentId)[0];
+                let segmentMetadata = this.getSegmentMetadata(this.message[messageSegment.customId].constructor);
                 Object.keys(segmentMetadata).forEach(key => {
                     let majorComponent = components[segmentMetadata[key].majorSequence];
                     if (majorComponent) {
-                        this.message[segmentId][key] = majorComponent[segmentMetadata[key].minorSequence];
+                        this.message[messageSegment.customId][key] = majorComponent[segmentMetadata[key].minorSequence];
                     }
                 });
             }

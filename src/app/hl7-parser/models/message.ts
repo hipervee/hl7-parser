@@ -4,12 +4,12 @@ import { PID } from './segments/pid';
 
 export class HL7Message {
     @HL7Segment({ id: 'MSH', multiple: false })
-    MSH: MSH;
+    Header: MSH;
     @HL7Segment({ id: 'PID', multiple: false })
-    PID: PID;
+    PatientIdentification: PID;
 
     constructor() {
-        this.MSH = new MSH();
-        this.PID = new PID();
+        this.Header = new MSH();
+        this.PatientIdentification = new PID();
     }
 }
