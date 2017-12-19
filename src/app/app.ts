@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import { Parser } from './hl7-parser/parser';
-let sampleMessage = `MSH|^~\&|SENDING_APPLICATION|SENDING_FACILITY|RECEIVING_APPLICATION|RECEIVING_FACILITY|20110613072836||SIU^S14|24916579|P|2.3||||||
+import { MSH } from './hl7-parser/models/segments/msh';
+let sampleMessage = `MSH|^~\&|SENDING^APPLICATION|SENDING_FACILITY|RECEIVING_APPLICATION|RECEIVING_FACILITY|20110613072836||SIU^S14|24916579|P|2.3||||||
                     SCH|10345^10345|2196178^2196178|||10345|OFFICE^Office visit|reason for the appointment|OFFICE|60|m|^^60^20110617084500^20110617093000|||||9^DENT^ARTHUR^||||9^DENT^ARTHUR^|||||Scheduled
                     PID|1|X0BB67|42||BEEBLEBROX^ZAPHOD||19781012|M|||1 Heart of Gold ave^^Fort Wayne^IN^46804||(260)555-1234|||S||999999999|||||||||||||||||||||
                     PV1|1|O|||||1^Adams^Douglas^A^MD^^^^|2^Colfer^Eoin^D^MD^^^^||||||||||||||||||||||||||||||||||||||||||99158||

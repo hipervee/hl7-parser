@@ -41,23 +41,35 @@ export class Parser {
     }
 
     parseSegments() {
-        let messageMetadata = Object.keys(this.messageSegmentsMetadata)
-            .map(o => {
-                this.messageSegmentsMetadata[o].customId = o;
-                return this.messageSegmentsMetadata[o];
-            });
+        let messageMetadata = Object.keys(this.messageSegmentsMetadata).map(o => {
+            this.messageSegmentsMetadata[o].customId = o;
+            return this.messageSegmentsMetadata[o];
+        });
         let parseableSegments = messageMetadata.map(o => o.id);
         this.rawSegments.forEach(segment => {
-            let components = segment.split('|').map(o => o.split('^'));
-            let segmentId = components[0][0];
+            let rawComponents = segment.split('|').map(o => o.split('^'));
+            let segmentId = rawComponents[0][0];
 
             if (parseableSegments.indexOf(segmentId) > -1) {
                 let messageSegment = messageMetadata.filter(o => o.id == segmentId)[0];
                 let segmentMetadata = this.getSegmentMetadata(this.message[messageSegment.customId].constructor);
-                Object.keys(segmentMetadata).forEach(key => {
-                    let majorComponent = components[segmentMetadata[key].majorSequence];
+                let componentNames = Object.keys(segmentMetadata);
+                let componentsMetadata = componentNames.map(o => {
+                    let componentIndex = segmentMetadata[o].majorSequence;
+                    let fieldIndex = segmentMetadata[o].minorSequence;
+                    let noOfFieldsInComponent = componentNames.filter(m => segmentMetadata[m].majorSequence == componentIndex).length;
+                    let t = { name: o, index: componentIndex, fieldIndex: fieldIndex, noOfFields: noOfFieldsInComponent };
+                    return t;
+                });
+                componentsMetadata.forEach(component => {
+                    let majorComponent = rawComponents[component.index];
                     if (majorComponent) {
-                        this.message[messageSegment.customId][key] = majorComponent[segmentMetadata[key].minorSequence];
+                        if (component.noOfFields == 1) {
+                            this.message[messageSegment.customId][component.name] = majorComponent.join('^');
+                        } else {
+                            this.message[messageSegment.customId][component.name] = majorComponent[component.fieldIndex];
+                        }
+
                     }
                 });
             }
