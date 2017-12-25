@@ -45,6 +45,8 @@ export class Parser {
             this.messageSegmentsMetadata[o].customId = o;
             return this.messageSegmentsMetadata[o];
         });
+        //let obj = segmentMetadata.newMe();
+        console.log('GOT IT', this.messageSegmentsMetadata.Header.newMe());
         let parseableSegments = messageMetadata.map(o => o.id);
         this.rawSegments.forEach(segment => {
             let rawComponents = segment.split('|').map(o => o.split('^'));
