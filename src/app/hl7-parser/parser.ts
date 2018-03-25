@@ -26,8 +26,10 @@ export class Parser {
             this.rawMessage = this.rawMessage.replace(/\n/g, '').replace(/\r/g, '');
 
             this.segmentIds.map(o => o + '|').forEach(segment => {
-                this.rawMessage = this.rawMessage.replace(segment, '\r\n' + segment);
+                let regEx  = new RegExp(segment, 'g');
+                this.rawMessage = this.rawMessage.replace(regEx, '\r\n' + segment);
             });
+            console.log(this.rawMessage);
         }
     }
 
@@ -46,7 +48,7 @@ export class Parser {
             return this.messageSegmentsMetadata[o];
         });
         //let obj = segmentMetadata.newMe();
-        console.log('GOT IT', this.messageSegmentsMetadata.Header.newMe());
+        //console.log('GOT IT', this.messageSegmentsMetadata.Header.newMe());
         let parseableSegments = messageMetadata.map(o => o.id);
         this.rawSegments.forEach(segment => {
             let rawComponents = segment.split('|').map(o => o.split('^'));

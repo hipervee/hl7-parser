@@ -11,3 +11,4 @@ let sampleMessage = `MSH|^~\&|SENDING^APPLICATION|SENDING_FACILITY|RECEIVING_APP
                     AIP|1|U|1^Adams^Douglas^A^MD^^^^|D^Adams, Douglas||20110614084500|||60|m^Minutes||Scheduled`;
 var parser = new Parser();
 parser.Parse(sampleMessage);
+console.log("I am here");
